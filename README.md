@@ -32,15 +32,26 @@ Both implementations provide the same set of mathematical functions:
 1. **Circle Area Calculator**
    - Input: radius (number)
    - Output: area of the circle using the formula π × r²
+   - 🎨 **Visual rendering**: SVG circle with the **radius highlighted** in orange
 
 2. **Rectangle Area Calculator**
    - Input: length and width (numbers)
    - Output: area of the rectangle using the formula length × width
+   - 🎨 **Visual rendering**: SVG rectangle with **length and width dimensions highlighted** with measurement lines
 
 3. **Factorial Calculator**
    - Input: number (integer)
    - Output: factorial value
    - Includes validation for negative numbers
+
+### Interactive Shape Visualization (Web Interface)
+
+When you calculate the area of a circle or rectangle in the web interface, the application automatically generates a **scaled SVG diagram** of the shape directly below the result:
+
+- **Circle**: Displays the circle filled in teal, with the radius drawn from the center to the edge and labeled `r = <value>`.
+- **Rectangle**: Displays the rectangle (proportionally scaled) with dimension lines on the bottom (`comprimento = <value>`) and on the left side (`largura = <value>`).
+
+This visual feedback helps reinforce the relationship between the input parameters and the resulting geometry.
 
 ## How to Use
 
@@ -49,10 +60,11 @@ Both implementations provide the same set of mathematical functions:
 #### Web Interface
 1. Open `javascript/demo.html` in your web browser
 2. Use the interactive interface to calculate:
-   - Circle area
-   - Rectangle area
+   - Circle area (with visual circle rendering and radius highlighted)
+   - Rectangle area (with visual rectangle rendering and dimensions highlighted)
    - Factorial values
 3. View the available functions in the DemoMath object
+4. Inspect the dynamically generated SVG shapes below each result
 
 #### Command Line (Node.js)
 ```bash
@@ -87,6 +99,7 @@ This project is intended to help you:
 - **JavaScript/Node.js**: ES6+ features, module system, DOM manipulation
 - **Python 3**: Standard library (math module), functional programming
 - **HTML5/CSS3**: Web interface for interactive testing
+- **SVG**: Dynamic, scalable shape visualizations rendered in the browser
 - **GitHub Copilot**: AI-assisted code generation and completion
 
 ## Test Coverage
@@ -120,6 +133,7 @@ This project demonstrates several key scenarios for GitHub Copilot:
 3. **Error handling** - Proper validation and exception handling
 4. **Test-driven examples** - Test cases that verify implementation correctness
 5. **UI/Web integration** - Frontend and backend interaction patterns
+6. **Dynamic SVG generation** - Programmatically rendering geometric shapes with annotated dimensions
 
 ## Getting Started
 

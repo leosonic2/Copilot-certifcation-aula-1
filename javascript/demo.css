@@ -104,3 +104,53 @@ pre {
 	font-size: 0.85rem;
 	color: #475569;
 }
+
+.shape {
+	margin-top: 0.8rem;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background: #fafaf7;
+	border: 1px dashed var(--border);
+	border-radius: 10px;
+	padding: 0.6rem;
+}
+
+.shape:empty {
+	display: none;
+}
+
+.shape svg {
+	width: 100%;
+	height: auto;
+	max-width: 280px;
+}
+
+.shape .fill {
+	fill: rgba(15, 118, 110, 0.15);
+	stroke: var(--accent);
+	stroke-width: 2;
+}
+
+.shape .dim-line {
+	stroke: var(--accent-2);
+	stroke-width: 2;
+	stroke-linecap: round;
+}
+
+.shape .dim-tick {
+	stroke: var(--accent-2);
+	stroke-width: 2;
+	stroke-linecap: round;
+}
+
+.shape .dim-label {
+	fill: var(--accent-2);
+	font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+	font-weight: 700;
+	font-size: 13px;
+}
+
+.shape .center-dot {
+	fill: var(--accent-2);
+}
