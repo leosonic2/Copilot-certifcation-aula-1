@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Teste de Funcoes - DemoMath</title>
+	<link rel="stylesheet" href="./demo.css" />
+</head>
+<body>
+	<main>
+		<h1>Painel de Testes - Funcoes e Objeto DemoMath</h1>
+
+		<div class="grid">
+			<section class="card">
+				<h2>Area do Circulo</h2>
+				<label for="circleRadius">Raio</label>
+				<input id="circleRadius" type="number" step="any" value="5" />
+				<button id="btnCircle">Calcular</button>
+				<div id="resultCircle" class="result"></div>
+			</section>
+
+			<section class="card">
+				<h2>Area do Retangulo</h2>
+				<label for="rectLength">Comprimento</label>
+				<input id="rectLength" type="number" step="any" value="8" />
+				<label for="rectWidth">Largura</label>
+				<input id="rectWidth" type="number" step="any" value="3" />
+				<button id="btnRectangle">Calcular</button>
+				<div id="resultRectangle" class="result"></div>
+			</section>
+
+			<section class="card">
+				<h2>Fatorial</h2>
+				<label for="factorialNumber">Numero</label>
+				<input id="factorialNumber" type="number" step="1" value="6" />
+				<button id="btnFactorial">Calcular</button>
+				<div id="resultFactorial" class="result"></div>
+			</section>
+
+			<section class="card">
+				<h2>Visualizacao do Objeto</h2>
+				<div>Funcoes disponiveis em <strong>DemoMath</strong>:</div>
+				<pre id="objectView"></pre>
+				<div class="note">Dica: abra o console e teste DemoMath.calculateCircleArea(10).</div>
+			</section>
+		</div>
+	</main>
+
+	<script src="./demo.js"></script>
+	<script src="./demo-ui.js"></script>
+</body>
+</html>
