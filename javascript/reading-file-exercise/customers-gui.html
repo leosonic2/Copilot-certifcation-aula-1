@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Clientes - Grid CSV</title>
+    <link rel="stylesheet" href="customers-gui.css" />
+</head>
+<body>
+    <main>
+        <h1>Dados de Clientes</h1>
+
+        <div id="status" class="status">Carregando...</div>
+
+        <div class="table-wrapper">
+            <table id="customersTable">
+                <thead id="tableHead"></thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+        </div>
+
+        <fieldset id="addForm" class="add-form" disabled>
+            <legend>Adicionar novo cliente</legend>
+            <div id="formFields" class="form-fields"></div>
+            <button id="btnAdd" type="button">Adicionar ao grid</button>
+        </fieldset>
+    </main>
+
+    <script src="ReadingFile.js"></script>
+    <script src="customers-gui.js"></script>
+</body>
+</html>
+

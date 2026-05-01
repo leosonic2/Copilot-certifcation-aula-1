@@ -1,0 +1,10 @@
+{
+  "name": "reading-file-exercise-js",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "jest --verbose"
+  },
+  "devDependencies": {}
+}
+
