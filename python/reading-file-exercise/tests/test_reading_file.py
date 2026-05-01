@@ -33,7 +33,7 @@ def test_load_customers_raises_value_error_for_empty_csv(tmp_path: Path):
     empty_path = tmp_path / "empty.csv"
     empty_path.write_text("", encoding="utf-8")
 
-    with pytest.raises(ValueError, match="CSV vazio ou sem cabecalho"):
+    with pytest.raises(ValueError, match="Empty CSV or missing header"):
         load_customers(empty_path)
 
 
@@ -54,7 +54,7 @@ def test_load_customers_raises_permission_error_when_open_fails(tmp_path: Path, 
 
     monkeypatch.setattr(Path, "open", raise_permission_error)
 
-    with pytest.raises(PermissionError, match="Sem permissao para ler o arquivo"):
+    with pytest.raises(PermissionError, match="Permission denied reading file"):
         load_customers(protected_path)
 
 
@@ -67,5 +67,5 @@ def test_load_customers_raises_value_error_when_csv_reader_fails(tmp_path: Path,
 
     monkeypatch.setattr(csv, "DictReader", raise_csv_error)
 
-    with pytest.raises(ValueError, match="Falha ao processar CSV"):
+    with pytest.raises(ValueError, match="Failed to process CSV"):
         load_customers(valid_path)

@@ -1,6 +1,6 @@
 /**
- * customers-gui.js — Interface de grid para exibir e adicionar clientes.
- * Depende de ReadingFile.js (parseCsv, loadCustomers).
+ * customers-gui.js — Grid interface to display and add customers.
+ * Depends on ReadingFile.js (parseCsv, loadCustomers).
  */
 
 (function () {
@@ -61,12 +61,12 @@
     }
 
     function updateStatus() {
-        statusEl.textContent = `Total de registros no grid: ${rows.length}`;
+        statusEl.textContent = `Total records in grid: ${rows.length}`;
         statusEl.className = "status";
     }
 
     function showError(message) {
-        statusEl.textContent = `Erro: ${message}`;
+        statusEl.textContent = `Error: ${message}`;
         statusEl.className = "status error";
     }
 
@@ -83,7 +83,7 @@
         });
 
         if (!hasValue) {
-            alert("Preencha pelo menos um campo para adicionar uma linha.");
+            alert("Fill in at least one field to add a row.");
             return;
         }
 
@@ -91,12 +91,12 @@
         appendTableRow(newRow);
         updateStatus();
 
-        // Limpa campos
+        // Clear fields
         columns.forEach((col) => {
             inputs[col].value = "";
         });
 
-        // Scroll para a última linha
+        // Scroll to last row
         tableBody.lastElementChild.scrollIntoView({ behavior: "smooth", block: "end" });
     }
 
@@ -121,4 +121,3 @@
 
     init();
 })();
-

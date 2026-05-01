@@ -1,6 +1,6 @@
 /**
- * test_ReadingFile.js — Testes unitários para parseCsv e loadCustomers.
- * Roda no navegador via tests/test-runner.html.
+ * test_ReadingFile.js — Unit tests for parseCsv and loadCustomers.
+ * Runs in the browser via tests/test-runner.html.
  */
 
 (function () {
@@ -16,7 +16,7 @@
         if (actual !== expected) {
             throw new Error(
                 (message || "assertEqual") +
-                    ` — esperado: ${JSON.stringify(expected)}, recebido: ${JSON.stringify(actual)}`
+                    ` — expected: ${JSON.stringify(expected)}, received: ${JSON.stringify(actual)}`
             );
         }
     }
@@ -29,12 +29,12 @@
             threw = true;
             if (expectedMessage && !e.message.includes(expectedMessage)) {
                 throw new Error(
-                    `Esperava erro com "${expectedMessage}", recebeu: "${e.message}"`
+                    `Expected error with "${expectedMessage}", got: "${e.message}"`
                 );
             }
         }
         if (!threw) {
-            throw new Error(`Esperava que lancasse erro${expectedMessage ? ': "' + expectedMessage + '"' : ""}`);
+            throw new Error(`Expected to throw error${expectedMessage ? ': "' + expectedMessage + '"' : ""}`);
         }
     }
 
@@ -46,12 +46,12 @@
             threw = true;
             if (expectedMessage && !e.message.includes(expectedMessage)) {
                 throw new Error(
-                    `Esperava erro com "${expectedMessage}", recebeu: "${e.message}"`
+                    `Expected error with "${expectedMessage}", got: "${e.message}"`
                 );
             }
         }
         if (!threw) {
-            throw new Error(`Esperava que rejeitasse${expectedMessage ? ': "' + expectedMessage + '"' : ""}`);
+            throw new Error(`Expected to reject${expectedMessage ? ': "' + expectedMessage + '"' : ""}`);
         }
     }
 
@@ -94,10 +94,10 @@
     }
 
     // ================================================================
-    // TESTES — parseCsv
+    // TESTS — parseCsv
     // ================================================================
 
-    async function parseCsv_retorna_colunas_e_linhas_de_csv_valido() {
+    async function parseCsv_returns_columns_and_rows_from_valid_csv() {
         const csv = "Name,Age,City\nAlice,30,Sao Paulo\nBob,25,Rio";
         const data = parseCsv(csv);
 
@@ -110,15 +110,15 @@
         assertEqual(data.rows[1]["City"], "Rio");
     }
 
-    async function parseCsv_lanca_erro_para_csv_vazio() {
-        assertThrows(() => parseCsv(""), "CSV vazio ou sem cabecalho");
+    async function parseCsv_throws_error_for_empty_csv() {
+        assertThrows(() => parseCsv(""), "Empty CSV or missing header");
     }
 
-    async function parseCsv_lanca_erro_para_csv_somente_espacos() {
-        assertThrows(() => parseCsv("   \n  "), "CSV vazio ou sem cabecalho");
+    async function parseCsv_throws_error_for_whitespace_only_csv() {
+        assertThrows(() => parseCsv("   \n  "), "Empty CSV or missing header");
     }
 
-    async function parseCsv_retorna_zero_linhas_para_csv_so_com_cabecalho() {
+    async function parseCsv_returns_zero_rows_for_header_only_csv() {
         const csv = "Name,Age,City";
         const data = parseCsv(csv);
 
@@ -126,7 +126,7 @@
         assertEqual(data.rows.length, 0);
     }
 
-    async function parseCsv_ignora_linhas_com_numero_diferente_de_colunas() {
+    async function parseCsv_skips_rows_with_mismatched_column_count() {
         const csv = "A,B\n1,2\n3\n4,5";
         const data = parseCsv(csv);
 
@@ -135,7 +135,7 @@
         assertEqual(data.rows[1]["A"], "4");
     }
 
-    async function parseCsv_remove_espacos_ao_redor_dos_valores() {
+    async function parseCsv_trims_whitespace_around_values() {
         const csv = " Name , Age \n  Alice , 30 ";
         const data = parseCsv(csv);
 
@@ -145,7 +145,7 @@
         assertEqual(data.rows[0]["Age"], "30");
     }
 
-    async function parseCsv_trata_quebra_de_linha_crlf() {
+    async function parseCsv_handles_crlf_line_breaks() {
         const csv = "X,Y\r\n1,2\r\n3,4";
         const data = parseCsv(csv);
 
@@ -153,7 +153,7 @@
         assertEqual(data.rows[0]["X"], "1");
     }
 
-    async function parseCsv_trata_valor_vazio_como_string_vazia() {
+    async function parseCsv_treats_empty_value_as_empty_string() {
         const csv = "A,B\n,hello";
         const data = parseCsv(csv);
 
@@ -162,29 +162,29 @@
     }
 
     // ================================================================
-    // TESTES — loadCustomers
+    // TESTS — loadCustomers
     // ================================================================
 
-    async function loadCustomers_carrega_csv_real_com_sucesso() {
+    async function loadCustomers_loads_real_csv_successfully() {
         const data = await loadCustomers();
 
-        assert(data.columns.length > 0, "Deve ter pelo menos uma coluna");
-        assert(data.rows.length > 0, "Deve ter pelo menos uma linha");
-        assert(typeof data.rows[0] === "object", "Cada linha deve ser um objeto");
+        assert(data.columns.length > 0, "Should have at least one column");
+        assert(data.rows.length > 0, "Should have at least one row");
+        assert(typeof data.rows[0] === "object", "Each row should be an object");
     }
 
-    async function loadCustomers_retorna_colunas_como_chaves_das_linhas() {
+    async function loadCustomers_returns_columns_as_row_keys() {
         const data = await loadCustomers();
 
         data.columns.forEach((col) => {
-            assert(col in data.rows[0], `Coluna "${col}" deve existir na primeira linha`);
+            assert(col in data.rows[0], `Column "${col}" should exist in the first row`);
         });
     }
 
-    async function loadCustomers_lanca_erro_para_url_inexistente() {
+    async function loadCustomers_throws_error_for_missing_url() {
         await assertRejects(
-            () => loadCustomers("./arquivo-que-nao-existe.csv"),
-            "Erro ao carregar arquivo"
+            () => loadCustomers("./nonexistent-file.csv"),
+            "Error loading file"
         );
     }
 
@@ -193,17 +193,17 @@
     // ================================================================
 
     async function runAll() {
-        await runTest("parseCsv retorna colunas e linhas de CSV valido", parseCsv_retorna_colunas_e_linhas_de_csv_valido);
-        await runTest("parseCsv lanca erro para CSV vazio", parseCsv_lanca_erro_para_csv_vazio);
-        await runTest("parseCsv lanca erro para CSV somente espacos", parseCsv_lanca_erro_para_csv_somente_espacos);
-        await runTest("parseCsv retorna zero linhas para CSV so com cabecalho", parseCsv_retorna_zero_linhas_para_csv_so_com_cabecalho);
-        await runTest("parseCsv ignora linhas com numero diferente de colunas", parseCsv_ignora_linhas_com_numero_diferente_de_colunas);
-        await runTest("parseCsv remove espacos ao redor dos valores", parseCsv_remove_espacos_ao_redor_dos_valores);
-        await runTest("parseCsv trata quebra de linha CRLF", parseCsv_trata_quebra_de_linha_crlf);
-        await runTest("parseCsv trata valor vazio como string vazia", parseCsv_trata_valor_vazio_como_string_vazia);
-        await runTest("loadCustomers carrega CSV real com sucesso", loadCustomers_carrega_csv_real_com_sucesso);
-        await runTest("loadCustomers retorna colunas como chaves das linhas", loadCustomers_retorna_colunas_como_chaves_das_linhas);
-        await runTest("loadCustomers lanca erro para URL inexistente", loadCustomers_lanca_erro_para_url_inexistente);
+        await runTest("parseCsv returns columns and rows from valid CSV", parseCsv_returns_columns_and_rows_from_valid_csv);
+        await runTest("parseCsv throws error for empty CSV", parseCsv_throws_error_for_empty_csv);
+        await runTest("parseCsv throws error for whitespace-only CSV", parseCsv_throws_error_for_whitespace_only_csv);
+        await runTest("parseCsv returns zero rows for header-only CSV", parseCsv_returns_zero_rows_for_header_only_csv);
+        await runTest("parseCsv skips rows with mismatched column count", parseCsv_skips_rows_with_mismatched_column_count);
+        await runTest("parseCsv trims whitespace around values", parseCsv_trims_whitespace_around_values);
+        await runTest("parseCsv handles CRLF line breaks", parseCsv_handles_crlf_line_breaks);
+        await runTest("parseCsv treats empty value as empty string", parseCsv_treats_empty_value_as_empty_string);
+        await runTest("loadCustomers loads real CSV successfully", loadCustomers_loads_real_csv_successfully);
+        await runTest("loadCustomers returns columns as row keys", loadCustomers_returns_columns_as_row_keys);
+        await runTest("loadCustomers throws error for missing URL", loadCustomers_throws_error_for_missing_url);
 
         renderResults();
     }
@@ -214,4 +214,3 @@
         runAll();
     }
 })();
-

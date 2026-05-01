@@ -7,7 +7,7 @@ from ReadingFile import load_customers
 class CustomersGridApp:
     def __init__(self, root: tk.Tk) -> None:
         self.root = root
-        self.root.title("Clientes - Grid CSV")
+        self.root.title("Customers - CSV Grid")
         self.root.geometry("1200x700")
         self.root.minsize(1000, 600)
 
@@ -22,7 +22,7 @@ class CustomersGridApp:
         container = ttk.Frame(self.root, padding=12)
         container.pack(fill="both", expand=True)
 
-        title = ttk.Label(container, text="Dados de clientes", font=("Segoe UI", 14, "bold"))
+        title = ttk.Label(container, text="Customer Data", font=("Segoe UI", 14, "bold"))
         title.pack(anchor="w", pady=(0, 8))
 
         grid_frame = ttk.Frame(container)
@@ -49,11 +49,11 @@ class CustomersGridApp:
         self._build_form(container)
 
     def _build_form(self, parent: ttk.Frame) -> None:
-        form_frame = ttk.LabelFrame(parent, text="Adicionar novo cliente", padding=10)
+        form_frame = ttk.LabelFrame(parent, text="Add new customer", padding=10)
         form_frame.pack(fill="x", pady=(6, 0))
 
         if not self.columns:
-            ttk.Label(form_frame, text="Sem colunas para inserir dados.").pack(anchor="w")
+            ttk.Label(form_frame, text="No columns available to insert data.").pack(anchor="w")
             return
 
         fields_frame = ttk.Frame(form_frame)
@@ -79,7 +79,7 @@ class CustomersGridApp:
         button_row = ttk.Frame(form_frame)
         button_row.pack(fill="x", pady=(6, 0))
 
-        add_button = ttk.Button(button_row, text="Adicionar ao grid", command=self._add_row)
+        add_button = ttk.Button(button_row, text="Add to grid", command=self._add_row)
         add_button.pack(side="left")
 
     def _populate_grid(self) -> None:
@@ -91,13 +91,13 @@ class CustomersGridApp:
 
     def _add_row(self) -> None:
         if not self.columns:
-            messagebox.showerror("Erro", "Nao ha colunas disponiveis para inserir dados.")
+            messagebox.showerror("Error", "No columns available to insert data.")
             return
 
         new_row = {column: self.entry_vars[column].get().strip() for column in self.columns}
 
         if not any(new_row.values()):
-            messagebox.showwarning("Atencao", "Preencha pelo menos um campo para adicionar uma linha.")
+            messagebox.showwarning("Warning", "Fill in at least one field to add a row.")
             return
 
         self.rows.append(new_row)
@@ -109,7 +109,7 @@ class CustomersGridApp:
         self._update_status()
 
     def _update_status(self) -> None:
-        self.status_label.configure(text=f"Total de registros no grid: {len(self.rows)}")
+        self.status_label.configure(text=f"Total records in grid: {len(self.rows)}")
 
 
 def main() -> None:
@@ -117,7 +117,7 @@ def main() -> None:
     try:
         CustomersGridApp(root)
     except Exception as error:
-        messagebox.showerror("Erro ao carregar dados", str(error))
+        messagebox.showerror("Error loading data", str(error))
         root.destroy()
         return
     root.mainloop()

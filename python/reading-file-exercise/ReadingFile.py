@@ -13,36 +13,36 @@ def load_customers(csv_path: Path | None = None) -> list[dict[str, str]]:
     target_path = csv_path or get_csv_path()
 
     if not target_path.exists():
-        raise FileNotFoundError(f"Arquivo nao encontrado: {target_path}")
+        raise FileNotFoundError(f"File not found: {target_path}")
 
     try:
         with target_path.open(mode="r", encoding="utf-8-sig", newline="") as file:
             reader = csv.DictReader(file)
             if not reader.fieldnames:
-                raise ValueError(f"CSV vazio ou sem cabecalho: {target_path}")
+                raise ValueError(f"Empty CSV or missing header: {target_path}")
             return list(reader)
     except PermissionError as exc:
-        raise PermissionError(f"Sem permissao para ler o arquivo: {target_path}") from exc
+        raise PermissionError(f"Permission denied reading file: {target_path}") from exc
     except UnicodeDecodeError as exc:
         raise UnicodeDecodeError(
             exc.encoding,
             exc.object,
             exc.start,
             exc.end,
-            f"Falha ao decodificar o arquivo '{target_path}': {exc.reason}",
+            f"Failed to decode file '{target_path}': {exc.reason}",
         ) from exc
     except csv.Error as exc:
-        raise ValueError(f"Falha ao processar CSV '{target_path}': {exc}") from exc
+        raise ValueError(f"Failed to process CSV '{target_path}': {exc}") from exc
 
 
 def run_preview() -> None:
     try:
         customers = load_customers()
-        print(f"Total de registros carregados: {len(customers)}")
-        print("Primeiro registro:")
-        print(customers[0] if customers else "Nenhum registro encontrado.")
+        print(f"Total records loaded: {len(customers)}")
+        print("First record:")
+        print(customers[0] if customers else "No records found.")
     except (FileNotFoundError, PermissionError, UnicodeDecodeError, ValueError) as error:
-        print(f"Erro ao carregar arquivo: {error}")
+        print(f"Error loading file: {error}")
 
 
 if __name__ == "__main__":
