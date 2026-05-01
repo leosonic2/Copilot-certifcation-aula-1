@@ -6,26 +6,41 @@ This is an **educational project** designed for learning and training purposes a
 
 ## Project Structure
 
-The repository contains implementations of mathematical utility functions in two popular programming languages:
+The repository contains implementations of mathematical utility functions and a CSV reading exercise in two popular programming languages:
 
 ```
-aula 1/
+Copilot-certifcation-aula-1/
 ├── javascript/
-│   ├── demo.js           # Math functions implementation
-│   ├── demo-ui.js        # Frontend interaction logic
-│   ├── demo.html         # Web interface for testing
-│   ├── demo.css          # Styling for the web interface
-│   └── main.js           # Node.js test runner
-└── python/
-    ├── demo.py           # Math functions implementation
-    ├── gui.py            # GUI interface (if applicable)
-    ├── main.py           # Test runner
-    └── __pycache__/      # Python cache files
+│   ├── demo.js                        # Math functions implementation
+│   ├── demo-ui.js                     # Frontend interaction logic
+│   ├── demo.html                      # Web interface for testing
+│   ├── demo.css                       # Styling for the web interface
+│   ├── main.js                        # Node.js test runner
+│   └── reading-file-exercise/
+│       ├── ReadingFile.js             # CSV loading and parsing functions
+│       ├── customers-gui.html         # Web interface — customer data grid
+│       ├── customers-gui.js           # Grid UI logic (display & add rows)
+│       ├── customers-gui.css          # Grid styling
+│       └── tests/
+│           ├── test-runner.html       # Browser-based test runner
+│           └── test_ReadingFile.js    # Unit tests for parseCsv & loadCustomers
+├── python/
+│   ├── demo.py                        # Math functions implementation
+│   ├── gui.py                         # Tkinter GUI for math functions
+│   ├── main.py                        # Test runner
+│   └── reading-file-exercise/
+│       ├── ReadingFile.py             # CSV loading with error handling
+│       ├── customers_gui.py           # Tkinter GUI — customer data grid
+│       └── tests/
+│           ├── conftest.py            # pytest path configuration
+│           └── test_reading_file.py   # Unit tests for load_customers
+└── sample-files/
+    └── customers-10000.csv            # Sample CSV dataset (10,000 records)
 ```
 
 ## Features
 
-### Available Functions
+### Math Functions
 
 Both implementations provide the same set of mathematical functions:
 
@@ -49,15 +64,25 @@ Both implementations provide the same set of mathematical functions:
 When you calculate the area of a circle or rectangle in the web interface, the application automatically generates a **scaled SVG diagram** of the shape directly below the result:
 
 - **Circle**: Displays the circle filled in teal, with the radius drawn from the center to the edge and labeled `r = <value>`.
-- **Rectangle**: Displays the rectangle (proportionally scaled) with dimension lines on the bottom (`comprimento = <value>`) and on the left side (`largura = <value>`).
+- **Rectangle**: Displays the rectangle (proportionally scaled) with dimension lines on the bottom (`length = <value>`) and on the left side (`width = <value>`).
 
 This visual feedback helps reinforce the relationship between the input parameters and the resulting geometry.
+
+### CSV Reading Exercise
+
+Both Python and JavaScript versions include a **reading-file-exercise** module that:
+
+- Loads and parses the `customers-10000.csv` file (10,000 customer records)
+- Displays all records in an interactive **data grid**
+- Allows **adding new rows** directly from the UI
+- Includes **error handling** for missing files, permission errors, encoding issues, and invalid CSV format
+- Has **unit tests** covering happy paths and edge cases
 
 ## How to Use
 
 ### JavaScript
 
-#### Web Interface
+#### Web Interface — Math Functions
 1. Open `javascript/demo.html` in your web browser
 2. Use the interactive interface to calculate:
    - Circle area (with visual circle rendering and radius highlighted)
@@ -66,23 +91,46 @@ This visual feedback helps reinforce the relationship between the input paramete
 3. View the available functions in the DemoMath object
 4. Inspect the dynamically generated SVG shapes below each result
 
+#### Web Interface — Customer Grid
+1. Start a local server from the project root:
+   ```powershell
+   py -3 -m http.server 8000 --directory "."
+   ```
+2. Open in your browser:
+   ```
+   http://localhost:8000/javascript/reading-file-exercise/customers-gui.html
+   ```
+
+#### Running JavaScript Tests
+With the local server running, open:
+```
+http://localhost:8000/javascript/reading-file-exercise/tests/test-runner.html
+```
+
 #### Command Line (Node.js)
 ```bash
 cd javascript
 node main.js
 ```
 
-This will run automated tests for all mathematical functions.
-
 ### Python
 
-#### Command Line
+#### Command Line — Math Functions
 ```bash
 cd python
 python main.py
 ```
 
-This will execute tests for all mathematical functions and display the results.
+#### GUI — Customer Grid
+```powershell
+py -3 python/reading-file-exercise/customers_gui.py
+```
+
+#### Running Python Tests
+```powershell
+py -3 -m pip install --user pytest
+py -3 -m pytest python/reading-file-exercise/tests/test_reading_file.py -v
+```
 
 ## Learning Objectives
 
@@ -93,13 +141,16 @@ This project is intended to help you:
 - ✅ Compare implementations across different programming languages
 - ✅ Practice working with test cases and validation
 - ✅ Gain experience with both web-based (JavaScript) and CLI-based (Python) applications
+- ✅ Work with file I/O, CSV parsing, and error handling
+- ✅ Build interactive data grid interfaces
 
 ## Technologies Used
 
 - **JavaScript/Node.js**: ES6+ features, module system, DOM manipulation
-- **Python 3**: Standard library (math module), functional programming
+- **Python 3**: Standard library (math, csv, pathlib, tkinter)
 - **HTML5/CSS3**: Web interface for interactive testing
 - **SVG**: Dynamic, scalable shape visualizations rendered in the browser
+- **pytest**: Python unit testing framework
 - **GitHub Copilot**: AI-assisted code generation and completion
 
 ## Test Coverage
@@ -107,12 +158,13 @@ This project is intended to help you:
 Both implementations include:
 - ✅ Basic functionality tests for all operations
 - ✅ Input validation (e.g., checking for negative factorial inputs)
-- ✅ Error handling with try-catch blocks
+- ✅ Error handling with try-catch / try-except blocks
 - ✅ Expected exception handling demonstrations
+- ✅ CSV loading — happy path and edge cases (empty file, invalid encoding, permission denied, malformed CSV)
 
 ## Example Output
 
-When running the test scripts, you should see output similar to:
+When running the math test scripts, you should see output similar to:
 
 ```
 === Testing DemoMath Functions ===
@@ -124,16 +176,26 @@ Factorial of 6: 720
 OK: exception caught -> Input validation error
 ```
 
+When running the CSV reading script:
+
+```
+Total records loaded: 10000
+First record:
+{'Index': '1', 'Customer Id': 'DD37Cf93aecA6Dc', ...}
+```
+
 ## Notes for GitHub Copilot Training
 
 This project demonstrates several key scenarios for GitHub Copilot:
 
-1. **Cross-language implementation** - Same logic, different syntax
-2. **Function documentation** - Clear docstrings and comments for AI assistance
-3. **Error handling** - Proper validation and exception handling
-4. **Test-driven examples** - Test cases that verify implementation correctness
-5. **UI/Web integration** - Frontend and backend interaction patterns
-6. **Dynamic SVG generation** - Programmatically rendering geometric shapes with annotated dimensions
+1. **Cross-language implementation** — Same logic, different syntax
+2. **Function documentation** — Clear docstrings and comments for AI assistance
+3. **Error handling** — Proper validation and exception handling
+4. **Test-driven examples** — Test cases that verify implementation correctness
+5. **UI/Web integration** — Frontend and backend interaction patterns
+6. **Dynamic SVG generation** — Programmatically rendering geometric shapes with annotated dimensions
+7. **File I/O and CSV parsing** — Reading, loading, and displaying structured data
+8. **Unit testing** — Comprehensive tests with pytest (Python) and browser-based runner (JavaScript)
 
 ## Getting Started
 
@@ -144,12 +206,12 @@ This project demonstrates several key scenarios for GitHub Copilot:
 
 ## Requirements
 
-- **For JavaScript**: Node.js 12+ (for running tests), modern web browser (for web interface)
-- **For Python**: Python 3.6+
+- **For JavaScript**: Modern web browser (for web interface), Node.js 12+ (optional, for CLI tests)
+- **For Python**: Python 3.10+, pytest (for running unit tests)
 
 ## Author
 
-**Leandro Martins**  
+**Leandro Martins**
 [LinkedIn Profile](https://www.linkedin.com/in/leandro-martins-2a073736/)
 
 Created for educational purposes as part of the GitHub Copilot Certification Training Program.
@@ -161,5 +223,3 @@ This project is provided as-is for educational and training purposes.
 ---
 
 **Happy Learning! 🚀**
-
-
