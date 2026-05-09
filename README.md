@@ -17,10 +17,11 @@ Copilot-certifcation-aula-1/
 │   ├── demo.css                       # Styling for the web interface
 │   ├── main.js                        # Node.js test runner
 │   └── reading-file-exercise/
-│       ├── ReadingFile.js             # CSV loading and parsing functions
+│       ├── ReadingFile.js             # CSV loading and single-pass parser (quoted, multiline)
 │       ├── customers-gui.html         # Web interface — customer data grid
 │       ├── customers-gui.js           # Grid UI logic (display & add rows)
 │       ├── customers-gui.css          # Grid styling
+│       ├── package.json               # Project metadata
 │       └── tests/
 │           ├── test-runner.html       # Browser-based test runner
 │           └── test_ReadingFile.js    # Unit tests for parseCsv & loadCustomers
@@ -29,11 +30,11 @@ Copilot-certifcation-aula-1/
 │   ├── gui.py                         # Tkinter GUI for math functions
 │   ├── main.py                        # Test runner
 │   └── reading-file-exercise/
-│       ├── ReadingFile.py             # CSV loading with error handling
+│       ├── ReadingFile.py             # CSV loading, parse_csv_text, error handling
 │       ├── customers_gui.py           # Tkinter GUI — customer data grid
 │       └── tests/
 │           ├── conftest.py            # pytest path configuration
-│           └── test_reading_file.py   # Unit tests for load_customers
+│           └── test_reading_file.py   # Unit tests for load_customers & parse_csv_text
 └── sample-files/
     └── customers-10000.csv            # Sample CSV dataset (10,000 records)
 ```
@@ -77,6 +78,20 @@ Both Python and JavaScript versions include a **reading-file-exercise** module t
 - Allows **adding new rows** directly from the UI
 - Includes **error handling** for missing files, permission errors, encoding issues, and invalid CSV format
 - Has **unit tests** covering happy paths and edge cases
+
+#### RFC 4180–compliant CSV Parser
+
+The JavaScript CSV parser (`parseCsvRows`) is a **single-pass, character-level parser** that fully supports:
+
+| Feature | Example |
+|---|---|
+| Quoted fields with commas | `"Avenue, 123"` → `Avenue, 123` |
+| Escaped quotes | `"He said ""hello"""` → `He said "hello"` |
+| Multiline quoted fields (`\n` / `\r\n`) | `"Line 1\nLine 2"` → preserved newlines |
+| Mixed: multiline + commas + quotes | `"Apt ""B"",\n123"` → `Apt "B",\n123` |
+| Malformed CSV detection | Unclosed quotes, unexpected characters after closing quote |
+
+The Python version leverages the built-in `csv.DictReader` (with `newline=""`) to achieve the same capabilities natively, plus exposes a `parse_csv_text()` function for in-memory string parsing — mirroring the JavaScript `parseCsv()` API.
 
 ## How to Use
 
@@ -161,6 +176,11 @@ Both implementations include:
 - ✅ Error handling with try-catch / try-except blocks
 - ✅ Expected exception handling demonstrations
 - ✅ CSV loading — happy path and edge cases (empty file, invalid encoding, permission denied, malformed CSV)
+- ✅ CSV parsing from string — quoted fields, escaped quotes, multiline fields, CRLF handling
+- ✅ Malformed CSV detection — unclosed quotes, unexpected characters
+
+**Python** — 16 tests (pytest): 7 `load_customers` + 9 `parse_csv_text`
+**JavaScript** — 14 tests (browser runner): 11 `parseCsv` + 3 `loadCustomers`
 
 ## Example Output
 
@@ -194,8 +214,9 @@ This project demonstrates several key scenarios for GitHub Copilot:
 4. **Test-driven examples** — Test cases that verify implementation correctness
 5. **UI/Web integration** — Frontend and backend interaction patterns
 6. **Dynamic SVG generation** — Programmatically rendering geometric shapes with annotated dimensions
-7. **File I/O and CSV parsing** — Reading, loading, and displaying structured data
+7. **File I/O and CSV parsing** — Reading, loading, and displaying structured data with full RFC 4180 support (quoted fields, escaped quotes, multiline)
 8. **Unit testing** — Comprehensive tests with pytest (Python) and browser-based runner (JavaScript)
+9. **Code refactoring** — Extracting small, testable helper functions from monolithic code
 
 ## Getting Started
 
