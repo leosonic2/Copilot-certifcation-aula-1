@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from ReadingFile import get_csv_path, load_customers
+from ReadingFile import get_csv_path, load_customers, parse_csv_text
 
 
 def test_get_csv_path_points_to_existing_customers_file():
@@ -69,3 +69,71 @@ def test_load_customers_raises_value_error_when_csv_reader_fails(tmp_path: Path,
 
     with pytest.raises(ValueError, match="Failed to process CSV"):
         load_customers(valid_path)
+
+
+# ================================================================
+# TESTS — parse_csv_text
+# ================================================================
+
+
+def test_parse_csv_text_returns_columns_and_rows_from_valid_csv():
+    data = parse_csv_text("Name,Age,City\nAlice,30,Sao Paulo\nBob,25,Rio")
+
+    assert data["columns"] == ["Name", "Age", "City"]
+    assert len(data["rows"]) == 2
+    assert data["rows"][0]["Name"] == "Alice"
+    assert data["rows"][1]["City"] == "Rio"
+
+
+def test_parse_csv_text_raises_value_error_for_empty_string():
+    with pytest.raises(ValueError, match="Empty CSV or missing header"):
+        parse_csv_text("")
+
+
+def test_parse_csv_text_raises_value_error_for_whitespace_only():
+    with pytest.raises(ValueError, match="Empty CSV or missing header"):
+        parse_csv_text("   \n  ")
+
+
+def test_parse_csv_text_returns_zero_rows_for_header_only_csv():
+    data = parse_csv_text("Name,Age,City")
+
+    assert data["columns"] == ["Name", "Age", "City"]
+    assert len(data["rows"]) == 0
+
+
+def test_parse_csv_text_parses_quoted_fields_with_commas():
+    data = parse_csv_text('Name,Address\n"Alice","Avenue, 123"')
+
+    assert len(data["rows"]) == 1
+    assert data["rows"][0]["Address"] == "Avenue, 123"
+
+
+def test_parse_csv_text_parses_escaped_quotes_inside_quoted_field():
+    data = parse_csv_text('Name,Note\n"Bob","He said ""hello"""')
+
+    assert data["rows"][0]["Note"] == 'He said "hello"'
+
+
+def test_parse_csv_text_parses_multiline_quoted_field():
+    data = parse_csv_text('Name,Bio\n"Alice","Line 1\nLine 2\nLine 3"\n"Bob","Simple"')
+
+    assert len(data["rows"]) == 2
+    assert data["rows"][0]["Bio"] == "Line 1\nLine 2\nLine 3"
+    assert data["rows"][1]["Name"] == "Bob"
+
+
+def test_parse_csv_text_parses_multiline_quoted_field_with_crlf():
+    data = parse_csv_text('A,B\r\n"hello\r\nworld",2\r\nx,y')
+
+    assert len(data["rows"]) == 2
+    assert data["rows"][0]["A"] == "hello\r\nworld"
+    assert data["rows"][0]["B"] == "2"
+
+
+def test_parse_csv_text_parses_multiline_with_commas_and_quotes():
+    data = parse_csv_text('Name,Address\n"Alice","Avenue, 123\nApt ""B"""')
+
+    assert len(data["rows"]) == 1
+    assert data["rows"][0]["Address"] == 'Avenue, 123\nApt "B"'
+

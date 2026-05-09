@@ -161,6 +161,56 @@
         assertEqual(data.rows[0]["B"], "hello");
     }
 
+    async function parseCsv_parses_quoted_fields_with_commas() {
+        const csv = 'Name,Address\n"Alice","Avenue, 123"';
+        const data = parseCsv(csv);
+
+        assertEqual(data.rows.length, 1);
+        assertEqual(data.rows[0]["Name"], "Alice");
+        assertEqual(data.rows[0]["Address"], "Avenue, 123");
+    }
+
+    async function parseCsv_parses_escaped_quotes_inside_quoted_field() {
+        const csv = 'Name,Note\n"Bob","He said ""hello"""';
+        const data = parseCsv(csv);
+
+        assertEqual(data.rows.length, 1);
+        assertEqual(data.rows[0]["Note"], 'He said "hello"');
+    }
+
+    async function parseCsv_throws_error_for_unclosed_quoted_field() {
+        assertThrows(() => parseCsv('A,B\n"1,2'), "missing closing quote");
+    }
+
+    async function parseCsv_parses_multiline_quoted_field() {
+        const csv = 'Name,Bio\n"Alice","Line 1\nLine 2\nLine 3"\n"Bob","Simple"';
+        const data = parseCsv(csv);
+
+        assertEqual(data.rows.length, 2);
+        assertEqual(data.rows[0]["Name"], "Alice");
+        assertEqual(data.rows[0]["Bio"], "Line 1\nLine 2\nLine 3");
+        assertEqual(data.rows[1]["Name"], "Bob");
+        assertEqual(data.rows[1]["Bio"], "Simple");
+    }
+
+    async function parseCsv_parses_multiline_quoted_field_with_crlf() {
+        const csv = 'A,B\r\n"hello\r\nworld",2\r\nx,y';
+        const data = parseCsv(csv);
+
+        assertEqual(data.rows.length, 2);
+        assertEqual(data.rows[0]["A"], "hello\r\nworld");
+        assertEqual(data.rows[0]["B"], "2");
+        assertEqual(data.rows[1]["A"], "x");
+    }
+
+    async function parseCsv_parses_multiline_with_commas_and_quotes() {
+        const csv = 'Name,Address\n"Alice","Avenue, 123\nApt ""B"""';
+        const data = parseCsv(csv);
+
+        assertEqual(data.rows.length, 1);
+        assertEqual(data.rows[0]["Address"], 'Avenue, 123\nApt "B"');
+    }
+
     // ================================================================
     // TESTS — loadCustomers
     // ================================================================
@@ -201,6 +251,12 @@
         await runTest("parseCsv trims whitespace around values", parseCsv_trims_whitespace_around_values);
         await runTest("parseCsv handles CRLF line breaks", parseCsv_handles_crlf_line_breaks);
         await runTest("parseCsv treats empty value as empty string", parseCsv_treats_empty_value_as_empty_string);
+        await runTest("parseCsv parses quoted fields with commas", parseCsv_parses_quoted_fields_with_commas);
+        await runTest("parseCsv parses escaped quotes inside quoted field", parseCsv_parses_escaped_quotes_inside_quoted_field);
+        await runTest("parseCsv throws error for unclosed quoted field", parseCsv_throws_error_for_unclosed_quoted_field);
+        await runTest("parseCsv parses multiline quoted field", parseCsv_parses_multiline_quoted_field);
+        await runTest("parseCsv parses multiline quoted field with CRLF", parseCsv_parses_multiline_quoted_field_with_crlf);
+        await runTest("parseCsv parses multiline with commas and quotes", parseCsv_parses_multiline_with_commas_and_quotes);
         await runTest("loadCustomers loads real CSV successfully", loadCustomers_loads_real_csv_successfully);
         await runTest("loadCustomers returns columns as row keys", loadCustomers_returns_columns_as_row_keys);
         await runTest("loadCustomers throws error for missing URL", loadCustomers_throws_error_for_missing_url);
