@@ -29,12 +29,17 @@ Copilot-certifcation-aula-1/
 │   ├── demo.py                        # Math functions implementation
 │   ├── gui.py                         # Tkinter GUI for math functions
 │   ├── main.py                        # Test runner
-│   └── reading-file-exercise/
-│       ├── ReadingFile.py             # CSV loading, parse_csv_text, error handling
-│       ├── customers_gui.py           # Tkinter GUI — customer data grid
+│   ├── reading-file-exercise/
+│   │   ├── ReadingFile.py             # CSV loading, parse_csv_text, error handling
+│   │   ├── customers_gui.py           # Tkinter GUI — customer data grid
+│   │   └── tests/
+│   │       ├── conftest.py            # pytest path configuration
+│   │       └── test_reading_file.py   # Unit tests for load_customers & parse_csv_text
+│   └── string-utils/
+│       ├── string_utils.py            # Text transformation utilities (process_text)
 │       └── tests/
 │           ├── conftest.py            # pytest path configuration
-│           └── test_reading_file.py   # Unit tests for load_customers & parse_csv_text
+│           └── test_string_utils.py   # 19 unit tests + standalone run_all_tests() runner
 └── sample-files/
     └── customers-10000.csv            # Sample CSV dataset (10,000 records)
 ```
@@ -93,6 +98,25 @@ The JavaScript CSV parser (`parseCsvRows`) is a **single-pass, character-level p
 
 The Python version leverages the built-in `csv.DictReader` (with `newline=""`) to achieve the same capabilities natively, plus exposes a `parse_csv_text()` function for in-memory string parsing — mirroring the JavaScript `parseCsv()` API.
 
+### String Utils
+
+The `python/string-utils` module provides a `process_text()` function that transforms the casing of words based on their length:
+
+- Words with **5+ characters** → UPPERCASE
+- Words with **4 or fewer characters** → lowercase
+- Consecutive whitespace is collapsed into a single space
+
+```python
+process_text("The quick brown fox jumps")
+# → "the QUICK BROWN fox JUMPS"
+```
+
+The module is decomposed into small, testable functions:
+- `_transform_word()` — single-word transformation logic
+- `MIN_LENGTH_FOR_UPPERCASE` — named constant (threshold = 5)
+
+Tests can be run via **pytest** or **standalone** (the test file includes a `run_all_tests()` method with auto-discovery).
+
 ## How to Use
 
 ### JavaScript
@@ -144,7 +168,15 @@ py -3 python/reading-file-exercise/customers_gui.py
 #### Running Python Tests
 ```powershell
 py -3 -m pip install --user pytest
+
+# CSV reading exercise
 py -3 -m pytest python/reading-file-exercise/tests/test_reading_file.py -v
+
+# String utils (via pytest)
+py -3 -m pytest python/string-utils/tests/test_string_utils.py -v
+
+# String utils (standalone — no pytest required)
+python python/string-utils/tests/test_string_utils.py
 ```
 
 ## Learning Objectives
@@ -178,8 +210,9 @@ Both implementations include:
 - ✅ CSV loading — happy path and edge cases (empty file, invalid encoding, permission denied, malformed CSV)
 - ✅ CSV parsing from string — quoted fields, escaped quotes, multiline fields, CRLF handling
 - ✅ Malformed CSV detection — unclosed quotes, unexpected characters
+- ✅ String transformation — boundary lengths, whitespace handling, special characters, mixed case
 
-**Python** — 16 tests (pytest): 7 `load_customers` + 9 `parse_csv_text`
+**Python** — 35 tests (pytest): 7 `load_customers` + 9 `parse_csv_text` + 19 `process_text`
 **JavaScript** — 14 tests (browser runner): 11 `parseCsv` + 3 `loadCustomers`
 
 ## Example Output
@@ -217,6 +250,7 @@ This project demonstrates several key scenarios for GitHub Copilot:
 7. **File I/O and CSV parsing** — Reading, loading, and displaying structured data with full RFC 4180 support (quoted fields, escaped quotes, multiline)
 8. **Unit testing** — Comprehensive tests with pytest (Python) and browser-based runner (JavaScript)
 9. **Code refactoring** — Extracting small, testable helper functions from monolithic code
+10. **Standalone test runners** — Running tests without external frameworks via auto-discovery
 
 ## Getting Started
 
